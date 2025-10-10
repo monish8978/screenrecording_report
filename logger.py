@@ -6,15 +6,15 @@ from settings import LOG_DIR, LOG_FILENAME
 # Ensure log directory exists (create if not present)
 os.makedirs(LOG_DIR, exist_ok=True)
 
-# Full log file path (e.g., /var/log/czentrix/auto_create_ticket.log)
+# Full log file path (e.g., /var/log/czentrix/screenrecording_report.log)
 LOG_FILE = os.path.join(LOG_DIR, LOG_FILENAME)
 
 # Create main logger instance for the app
-log = logging.getLogger("auto_create_ticket")
+log = logging.getLogger("screenrecording_report")
 log.setLevel(logging.INFO)  # Default logging level (INFO and above)
 
 # Define log format
-# Example output: 2025-09-18 13:20:15,123 - auto_create_ticket - INFO - 42 - Starting app...
+# Example output: 2025-09-18 13:20:15,123 - screenrecording_report - INFO - 42 - Starting app...
 formatter = logging.Formatter(
     '%(asctime)s - %(name)s - %(levelname)s - %(lineno)d - %(message)s'
 )
