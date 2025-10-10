@@ -67,7 +67,7 @@ EOL
 
     echo "Enabling and starting screenrecording-report service..."
     sudo systemctl enable screenrecording-report
-    sudo systemctl start screenrecording-report
+    sudo systemctl restart screenrecording-report
 fi
 
 
