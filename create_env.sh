@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Setting up the directory
-cd /Czentrix/apps/screenrecording_report_report/
+cd /Czentrix/apps/screenrecording_report/
 cdir="$(pwd)/venv/bin/"
 
 # Printing the directory for debugging
@@ -27,7 +27,7 @@ echo "Requirements installed."
 # -----------------------------
 
 SERVICE_DIR="/etc/systemd/system"
-SERVICE_FILE="$SERVICE_DIR/screenrecording_report_report.service"
+SERVICE_FILE="$SERVICE_DIR/screenrecording-report.service"
 
 # 1️⃣ Ensure /etc/systemd/system directory exists
 if [ ! -d "$SERVICE_DIR" ]; then
@@ -49,7 +49,7 @@ Description=Auto Create Ticket FastAPI Service
 After=network.target
 
 [Service]
-WorkingDirectory=/Czentrix/apps/screenrecording_report_report
+WorkingDirectory=/Czentrix/apps/screenrecording_report
 ExecStart=$cdir/uvicorn app:app --host 0.0.0.0 --port 9006 --workers 4
 Restart=always
 RestartSec=5
@@ -65,9 +65,9 @@ EOL
     echo "Reloading systemd..."
     sudo systemctl daemon-reload
 
-    echo "Enabling and starting screenrecording_report-report service..."
-    sudo systemctl enable screenrecording_report-report
-    sudo systemctl start screenrecording_report-report
+    echo "Enabling and starting screenrecording-report service..."
+    sudo systemctl enable screenrecording-report
+    sudo systemctl start screenrecording-report
 fi
 
 
@@ -75,7 +75,7 @@ fi
 # Add Crontab Entry (Service Health Check)
 # -----------------------------
 
-CRON_JOB="*/2 * * * * /Czentrix/apps/screenrecording_report_report/venv/bin/python /Czentrix/apps/screenrecording_report_report/service_check.py"
+CRON_JOB="*/2 * * * * /Czentrix/apps/screenrecording_report/venv/bin/python /Czentrix/apps/screenrecording_report/service_check.py"
 
 # Check if cron job already exists
 (crontab -l 2>/dev/null | grep -F "$CRON_JOB") >/dev/null
