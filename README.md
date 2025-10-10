@@ -26,9 +26,12 @@ A **FastAPI-based REST API** for managing user and client screen recording repor
 
 ---
 
-## ⚙️ Installation
+## ⚙️ Installation & Setup
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository_url>
-   cd screenrecoding-report
+Run the installation script to set up the environment, install dependencies, and configure the service:
+
+```bash
+git clone https://github.com/monish8978/auto_create_ticket.git
+cd auto_create_ticket
+chmod +x create_env.sh
+./create_env.sh
