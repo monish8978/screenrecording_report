@@ -203,9 +203,36 @@ async def update_client_report_is_valid(request: Request):
 
 
 # ==========================================================
-# ▶️ RUN THE APPLICATION
+# ❌ DELETE: Remove a Client Report
 # ==========================================================
-if __name__ == "__main__":
-    import uvicorn
-    log.info(f"🚀 Starting Screen Recording Report API on port {PORT}")
-    uvicorn.run(app, host="0.0.0.0", port=PORT)
+@app.delete("/client_report/delete")
+async def delete_client_report(clientId: int, macAddress: str):
+    """
+    ❌ Delete a client report from MongoDB based on clientId and macAddress.
+    """
+    try:
+        # Attempt to delete the document
+        result = client_collection.delete_one({"clientId": clientId, "macAddress": macAddress})
+
+        if result.deleted_count == 0:
+            log.warning(f"No client report found to delete for clientId={clientId}, macAddress={macAddress}")
+            return create_response(404, "No matching client report found to delete")
+
+        log.info(f"Client report deleted for clientId={clientId}, macAddress={macAddress}")
+        return create_response(200, "Client report deleted successfully", {"deleted_count": result.deleted_count})
+
+    except errors.PyMongoError as e:
+        log.error(f"MongoDB Error in delete_client_report: {str(e)}")
+        raise HTTPException(status_code=500, detail="Database error occurred")
+    except Exception as e:
+        log.error(f"Unexpected Error in delete_client_report: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error deleting client report: {str(e)}")
+
+
+# ==========================================================
+# ▶️ RUN THE APPLICATION
+# # ==========================================================
+# if __name__ == "__main__":
+#     import uvicorn
+#     log.info(f"🚀 Starting Screen Recording Report API on port {PORT}")
+#     uvicorn.run(app, host="0.0.0.0", port=PORT)
