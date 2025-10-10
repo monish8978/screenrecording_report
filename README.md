@@ -97,5 +97,3 @@ Logs are stored at:
 You can monitor logs using:
 
 tail -f /var/log/czentrix/screenrecoding_report.log
-chmod +x create_env.sh
-./create_env.sh
