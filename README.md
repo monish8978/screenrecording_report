@@ -22,7 +22,7 @@ A **FastAPI-based REST API** for managing user and client screen recording repor
 - **Database:** MongoDB Atlas  
 - **Python Version:** 3.10+ recommended  
 - **Logging:** Python `logging` with daily rotation  
-- **Service Management:** systemd service (`screenrecoding-report`)  
+- **Service Management:** systemd service (`screenrecording-report`)  
 
 ---
 
@@ -31,8 +31,8 @@ A **FastAPI-based REST API** for managing user and client screen recording repor
 Run the installation script to set up the environment, install dependencies, and configure the service:
 
 ```bash
-git clone https://github.com/monish8978/screenrecoding_report.git
-cd screenrecoding_report
+git clone https://github.com/monish8978/screenrecording_report.git
+cd screenrecording_report
 chmod +x create_env.sh
 ./create_env.sh
 
@@ -42,9 +42,9 @@ This script will:
 
 📦 Install all dependencies from requirements.txt
 
-⚙️ Set up a systemd service at /etc/systemd/system/screenrecoding-report.service
+⚙️ Set up a systemd service at /etc/systemd/system/screenrecording-report.service
 
-🔁 Enable and start the screenrecoding-report service
+🔁 Enable and start the screenrecording-report service
 
 ✅ Verify that the service is active
 
@@ -55,7 +55,7 @@ Once setup is complete, the API will automatically start running as a service.
 
 You can verify this by checking the status:
 
-sudo systemctl status screenrecoding-report
+sudo systemctl status screenrecording-report
 
 It should show something like:
 
@@ -65,8 +65,8 @@ It should show something like:
 
 You can also manually start or stop the service anytime:
 
-sudo systemctl restart screenrecoding-report
-sudo systemctl stop screenrecoding-report
+sudo systemctl restart screenrecording-report
+sudo systemctl stop screenrecording-report
 
 
 🌐 Accessing the API
@@ -85,7 +85,7 @@ http://0.0.0.0:9006
 
 The setup also ensures a cron job is added:
 
-*/2 * * * * /Czentrix/apps/screenrecoding_report/venv/bin/python /Czentrix/apps/screenrecoding_report/service_check.py
+*/2 * * * * /Czentrix/apps/screenrecording_report/venv/bin/python /Czentrix/apps/screenrecording_report/service_check.py
 
 This job runs every 2 minutes to check and manage services.
 
@@ -93,9 +93,9 @@ This job runs every 2 minutes to check and manage services.
 
 Logs are stored at:
 
-/var/log/czentrix/screenrecoding_report.log
+/var/log/czentrix/screenrecording_report.log
 
 
 You can monitor logs using:
 
-tail -f /var/log/czentrix/screenrecoding_report.log
+tail -f /var/log/czentrix/screenrecording_report.log
