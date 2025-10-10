@@ -33,6 +33,8 @@ Run the installation script to set up the environment, install dependencies, and
 ```bash
 git clone https://github.com/monish8978/screenrecoding_report.git
 cd screenrecoding_report
+chmod +x create_env.sh
+./create_env.sh
 
 This script will:
 
