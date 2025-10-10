@@ -2,6 +2,7 @@
 # 📄 IMPORTS
 # ==========================================================
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient, errors
 from settings import (
     MONGO_URI, MONGO_DB, MONGO_USER_COLLECTION,
@@ -29,6 +30,17 @@ app = FastAPI(
     title="🎥 Screen Recording Report API",
     version="1.1",
     description="API for managing user and client screen recording reports"
+)
+
+# ==========================================================
+# 🌐 CORS CONFIGURATION: Allow All Origins
+# ==========================================================
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],         # ✅ Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],         # Allow all HTTP methods (GET, POST, PUT, DELETE)
+    allow_headers=["*"],         # Allow all headers
 )
 
 # ==========================================================
