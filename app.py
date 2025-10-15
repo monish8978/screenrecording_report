@@ -2,7 +2,6 @@
 # 📄 IMPORTS
 # ==========================================================
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient, errors
 from settings import (
     MONGO_URI, MONGO_DB, MONGO_USER_COLLECTION,
@@ -30,17 +29,6 @@ app = FastAPI(
     title="🎥 Screen Recording Report API",
     version="1.1",
     description="API for managing user and client screen recording reports"
-)
-
-# ==========================================================
-# 🌐 CORS CONFIGURATION: Allow All Origins
-# ==========================================================
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],         # ✅ Allow all origins
-    allow_credentials=True,
-    allow_methods=["*"],         # Allow all HTTP methods (GET, POST, PUT, DELETE)
-    allow_headers=["*"],         # Allow all headers
 )
 
 # ==========================================================
@@ -141,16 +129,16 @@ async def get_client_report():
 # 🔍 GET: Check if Report Exists
 # ==========================================================
 @app.get("/check_report_exists")
-async def check_report_exists(clientId: int, macAddress: str):
+async def check_report_exists(hostAddress: int, macAddress: str):
     """
     ✅ Check if a record exists for a given clientId and macAddress
     in either 'user_report' or 'client_report' collection.
     """
     try:
         # Check in user collection
-        user_doc = user_collection.find_one({"clientId": clientId, "macAddress": macAddress})
+        user_doc = user_collection.find_one({"clientId": hostAddress, "macAddress": macAddress})
         if user_doc:
-            log.info(f"Record found in user_collection for clientId={clientId}")
+            log.info(f"Record found in user_collection for hostAddress={hostAddress}")
             return create_response(200, "Record found in user collection", {
                 "exists": True,
                 "collection": "user_collection",
@@ -158,16 +146,16 @@ async def check_report_exists(clientId: int, macAddress: str):
             })
 
         # Check in client collection
-        client_doc = client_collection.find_one({"clientId": clientId, "macAddress": macAddress})
+        client_doc = client_collection.find_one({"hostAddress": hostAddress, "macAddress": macAddress})
         if client_doc:
-            log.info(f"Record found in client_collection for clientId={clientId}")
+            log.info(f"Record found in client_collection for clientId={hostAddress}")
             return create_response(200, "Record found in client collection", {
                 "exists": True,
                 "collection": "client_collection",
                 "isValid": client_doc.get("isValid", False)
             })
 
-        log.info(f"No record found for clientId={clientId}, macAddress={macAddress}")
+        log.info(f"No record found for clientId={hostAddress}, macAddress={macAddress}")
         return create_response(200, "No matching record found", {"exists": False})
 
     except errors.PyMongoError as e:
@@ -243,7 +231,7 @@ async def delete_client_report(clientId: int, macAddress: str):
 
 # ==========================================================
 # ▶️ RUN THE APPLICATION
-# # ==========================================================
+# ==========================================================
 # if __name__ == "__main__":
 #     import uvicorn
 #     log.info(f"🚀 Starting Screen Recording Report API on port {PORT}")
