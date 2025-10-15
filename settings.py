@@ -26,7 +26,7 @@ MONGO_URI = "mongodb+srv://mongodb:mongodb@cluster0.1nfoz.mongodb.net/?retryWrit
 # MongoDB database name:
 # - This is the main database used to store
 #   both user and client screen recording reports.
-MONGO_DB = "screenrecoding"
+MONGO_DB = "screenrecording"
 
 
 # MongoDB collection for storing user reports
