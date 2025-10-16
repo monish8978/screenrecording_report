@@ -39,7 +39,16 @@ fi
 
 # 2️⃣ Check if service file already exists
 if [ -f "$SERVICE_FILE" ]; then
-    echo "Service file already exists at $SERVICE_FILE — skipping creation."
+    echo "Service file already exists at $SERVICE_FILE."
+    
+    # Check if the service is running
+    if systemctl is-active --quiet screenrecording-report; then
+        echo "Service is already running. Restarting the service..."
+        sudo systemctl restart screenrecording-report
+    else
+        echo "Service is not running. Starting the service..."
+        sudo systemctl start screenrecording-report
+    fi
 else
     echo "Creating systemd service file at $SERVICE_FILE..."
 
@@ -67,7 +76,7 @@ EOL
 
     echo "Enabling and starting screenrecording-report service..."
     sudo systemctl enable screenrecording-report
-    sudo systemctl restart screenrecording-report
+    sudo systemctl start screenrecording-report
 fi
 
 
