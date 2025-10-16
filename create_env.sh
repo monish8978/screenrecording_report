@@ -42,7 +42,7 @@ if [ -f "$SERVICE_FILE" ]; then
     echo "Service file already exists at $SERVICE_FILE — skipping creation."
 else
     echo "Creating systemd service file at $SERVICE_FILE..."
-    
+
     sudo tee "$SERVICE_FILE" > /dev/null <<EOL
 [Unit]
 Description=Auto Create Ticket FastAPI Service
