@@ -67,7 +67,7 @@ LOG_DIR = "/var/log/czentrix/"
 #   - API request and response metadata
 #   - Database connection status
 #   - Error traces for debugging
-LOG_FILENAME = "screenrecoding_report.log"
+LOG_FILENAME = "screenrecording_report.log"
 
 
 # ===============================================
@@ -87,4 +87,4 @@ LOG_FILENAME = "screenrecoding_report.log"
 # This is the name of the systemd service file, used when managing the app with:
 #   - `systemctl status screenrecoding-report`
 #   - `systemctl start screenrecoding-report`
-SERVICE_FILE = "screenrecoding-report"
+SERVICE_FILE = "screenrecording-report"
