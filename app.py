@@ -70,10 +70,20 @@ async def add_user_report(request: Request):
 async def add_client_report(request: Request):
     """➕ Insert a new client report document into MongoDB."""
     try:
+        # Parse the incoming JSON data
         data = await request.json()
+
         if not data:
             raise HTTPException(status_code=400, detail="Request body cannot be empty")
 
+        # Check if a client report with the same clientId already exists
+        existing_client = client_collection.find_one({"clientId": data['clientId']})
+
+        if existing_client:
+            log.error(f"Client with clientId {data['clientId']} already exists.")
+            return create_response(400, f"Client ID {data['clientId']} already exists.")
+
+        # Insert the new client report into the database
         result = client_collection.insert_one(data)
         log.info(f"🏢 Client report inserted: {result.inserted_id}")
 
@@ -129,14 +139,14 @@ async def get_client_report():
 # 🔍 GET: Check if Report Exists
 # ==========================================================
 @app.get("/check_report_exists")
-async def check_report_exists(hostAddress: int, macAddress: str):
+async def check_report_exists(hostAddress: str, macAddress: str):
     """
     ✅ Check if a record exists for a given clientId and macAddress
     in either 'user_report' or 'client_report' collection.
     """
     try:
         # Check in user collection
-        user_doc = user_collection.find_one({"clientId": hostAddress, "macAddress": macAddress})
+        user_doc = user_collection.find_one({"hostAddress": hostAddress, "macAddress": macAddress})
         if user_doc:
             log.info(f"Record found in user_collection for hostAddress={hostAddress}")
             return create_response(200, "Record found in user collection", {
@@ -171,27 +181,32 @@ async def check_report_exists(hostAddress: int, macAddress: str):
 # ==========================================================
 @app.put("/client_report/update_validity")
 async def update_client_report_is_valid(request: Request):
-    """🔄 Update the 'isValid' field in a client report."""
+    """🔄 Update the 'isValid' and 'clientName' fields in a client report."""
     try:
         data = await request.json()
         client_id = data.get("clientId")
-        mac = data.get("macAddress")
+        clientName = data.get("clientName")
         is_valid = data.get("isValid")
 
         # Validate required fields
-        if not all([client_id, mac, isinstance(is_valid, bool)]):
-            raise HTTPException(status_code=400, detail="clientId, macAddress, and boolean isValid are required")
+        if not all([client_id, isinstance(is_valid, bool)]):
+            raise HTTPException(status_code=400, detail="clientId and boolean isValid are required")
+
+        # Prepare the update fields
+        update_fields = {"isValid": is_valid}
+        if clientName:
+            update_fields["clientName"] = clientName  # Add clientName to update fields if provided
 
         result = client_collection.update_one(
-            {"clientId": client_id, "macAddress": mac},
-            {"$set": {"isValid": is_valid}}
+            {"clientId": client_id},
+            {"$set": update_fields}  # Update both isValid and clientName
         )
 
         if result.matched_count == 0:
-            log.warning(f"No client report found for clientId={client_id}, mac={mac}")
+            log.warning(f"No client report found for clientId={client_id}")
             return create_response(404, "No matching client report found to update")
 
-        log.info(f"Client report updated for clientId={client_id}, mac={mac}")
+        log.info(f"Client report updated for clientId={client_id}")
         return create_response(200, "Client report updated successfully", {"updated_count": result.modified_count})
 
     except errors.PyMongoError as e:
@@ -236,3 +251,4 @@ async def delete_client_report(clientId: int, macAddress: str):
 #     import uvicorn
 #     log.info(f"🚀 Starting Screen Recording Report API on port {PORT}")
 #     uvicorn.run(app, host="0.0.0.0", port=PORT)
+
